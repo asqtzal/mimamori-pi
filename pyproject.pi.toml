@@ -1,3 +1,7 @@
+# Raspberry Pi本番環境用の設定ファイル
+# このファイルはRaspberry Pi環境でpyproject.tomlとして使用します
+# 使用方法: Raspberry Pi環境では　uv sync -p pyproject.pi.toml
+
 [project]
 name = "mimamori-pi"
 version = "0.1.0"
@@ -13,7 +17,11 @@ dependencies = [
 ]
 
 [dependency-groups]
-# 開発環境での依存関係
+# Raspberry Pi本番環境でのみ必要な依存関係
+pi = [
+    "picamera2>=0.3.0; sys_platform == 'linux'",
+]
+# 開発環境での依存関係（オプション）
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=4.1.0",
