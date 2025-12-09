@@ -45,8 +45,10 @@ fileMatchPattern: '**/mimamori-pi/**'
 - `CAMERA_RESOLUTION`: カメラ解像度（形式: `WIDTHxHEIGHT`、デフォルト: `640x480`）
 - `CAMERA_FRAMERATE`: カメラフレームレート（デフォルト: `15`）
 
-**ログ設定**（将来実装予定）:
-- `MIMAMORI_PI_LOG_LEVEL`: `INFO` / `DEBUG` などログレベルを制御
+**ログ設定**:
+- `MIMAMORI_PI_LOG_LEVEL`: ログレベルを制御（`DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`、デフォルト: `INFO`）
+  - ログはコンソールと `data/logs/mimamori-pi.log` の両方に出力されます
+  - ログローテーション: 10MBごと、最大5ファイルまで保持
 
 秘匿情報は `.env` 管理（コード直書き禁止）。
 

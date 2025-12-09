@@ -68,7 +68,7 @@ mimamori-pi/
 │       ├── config/                 # 設定管理パッケージ
 │       │   ├── __init__.py
 │       │   ├── settings.py         # アプリケーション設定（Settingsクラス）
-│       │   └── logging_config.py  # ロギング設定（将来実装）
+│       │   └── logging_config.py  # ロギング設定
 │       ├── camera/
 │       │   ├── __init__.py
 │       │   └── camera_service.py  # カメラ制御ロジック
@@ -176,19 +176,30 @@ mimamori-pi/
 **設定項目**:
 - Flask設定（ホスト、ポート、シークレットキー、デバッグモード）
 - カメラ設定（解像度、フレームレート）
+- ログ設定（ログレベル、コンソール/ファイル出力、ログローテーション）
 - スナップショット設定（間隔、保存先）※将来実装
 - ストレージ設定（クリーンアップ閾値）※将来実装
-- ログ設定※将来実装
 
 **環境変数からの読み込み**:
 - `.env` ファイルまたは環境変数から設定を読み込む（`python-dotenv`使用）
 - 環境変数が未設定の場合はデフォルト値を使用
 - 型変換と検証機能を実装（整数、真偽値、解像度のパース）
 
+**ログ設定**:
+- `mimamori_pi.config.logging_config.setup_logging()` 関数でロギングを初期化
+- 環境変数 `MIMAMORI_PI_LOG_LEVEL` でログレベルを制御（デフォルト: `INFO`）
+- コンソール（`StreamHandler`）とファイル（`RotatingFileHandler`）の両方に出力
+- ログファイル: `data/logs/mimamori-pi.log`（自動的にディレクトリ作成）
+- ログローテーション: 10MBごと、最大5ファイルまで保持
+
 **使用例**:
 ```python
-from mimamori_pi.config import Settings
+from mimamori_pi.config import Settings, setup_logging
 
+# ロギング設定を初期化
+setup_logging()
+
+# アプリケーション設定を読み込み
 settings = Settings()
 flask_config = settings.to_flask_config()
 resolution = settings.CAMERA_RESOLUTION  # (640, 480)
