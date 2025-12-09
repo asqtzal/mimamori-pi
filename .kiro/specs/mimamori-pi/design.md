@@ -65,7 +65,10 @@ mimamori-pi/
 │   └── mimamori_pi/
 │       ├── __init__.py
 │       ├── app.py                 # Flaskアプリケーションエントリーポイント
-│       ├── config.py              # 設定管理
+│       ├── config/                 # 設定管理パッケージ
+│       │   ├── __init__.py
+│       │   ├── settings.py         # アプリケーション設定（Settingsクラス）
+│       │   └── logging_config.py  # ロギング設定（将来実装）
 │       ├── camera/
 │       │   ├── __init__.py
 │       │   └── camera_service.py  # カメラ制御ロジック
@@ -168,12 +171,28 @@ mimamori-pi/
 
 **責務**: アプリケーション設定の一元管理
 
+**実装**: `mimamori_pi.config.Settings` クラス
+
 **設定項目**:
-- Flask設定（ホスト、ポート、シークレットキー）
-- カメラ設定（解像度、フレームレート、回転）
-- スナップショット設定（間隔、保存先）
-- ストレージ設定（クリーンアップ閾値）
-- ログ設定
+- Flask設定（ホスト、ポート、シークレットキー、デバッグモード）
+- カメラ設定（解像度、フレームレート）
+- スナップショット設定（間隔、保存先）※将来実装
+- ストレージ設定（クリーンアップ閾値）※将来実装
+- ログ設定※将来実装
+
+**環境変数からの読み込み**:
+- `.env` ファイルまたは環境変数から設定を読み込む（`python-dotenv`使用）
+- 環境変数が未設定の場合はデフォルト値を使用
+- 型変換と検証機能を実装（整数、真偽値、解像度のパース）
+
+**使用例**:
+```python
+from mimamori_pi.config import Settings
+
+settings = Settings()
+flask_config = settings.to_flask_config()
+resolution = settings.CAMERA_RESOLUTION  # (640, 480)
+```
 
 ### 5. Web Routes
 

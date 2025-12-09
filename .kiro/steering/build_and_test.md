@@ -32,9 +32,23 @@ fileMatchPattern: '**/mimamori-pi/**'
    - 手動で有効化する場合: `source .venv/bin/activate` （Windows: `.venv\Scripts\activate`）
 
 ### 環境変数
+
+設定は `.env` ファイルまたは環境変数で管理します。`.env` ファイルはプロジェクトルートに配置してください。
+
+**Flask設定**:
+- `FLASK_HOST`: Flaskサーバーのホスト（デフォルト: `0.0.0.0`）
+- `FLASK_PORT`: Flaskサーバーのポート（デフォルト: `5000`）
+- `SECRET_KEY`: Flaskセッション用シークレットキー（デフォルト: `dev-secret-key-change-in-production`）
+- `FLASK_DEBUG`: デバッグモード（`true`/`false`、デフォルト: `false`）
+
+**カメラ設定**:
+- `CAMERA_RESOLUTION`: カメラ解像度（形式: `WIDTHxHEIGHT`、デフォルト: `640x480`）
+- `CAMERA_FRAMERATE`: カメラフレームレート（デフォルト: `15`）
+
+**ログ設定**（将来実装予定）:
 - `MIMAMORI_PI_LOG_LEVEL`: `INFO` / `DEBUG` などログレベルを制御
-- `SECRET_KEY`: Flask セッション用シークレットキー
-- 秘匿情報は `.env` 管理（コード直書き禁止）
+
+秘匿情報は `.env` 管理（コード直書き禁止）。
 
 ### コマンド一覧
 

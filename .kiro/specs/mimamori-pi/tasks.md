@@ -40,12 +40,13 @@
 
 ### 2. 設定管理の実装
 
-- [ ] 2.1 設定クラスの実装
+- [x] 2.1 設定クラスの実装
   - `src/mimamori_pi/config/settings.py`を作成
   - Flask基本設定（HOST, PORT, SECRET_KEY）を定義
   - カメラ基本設定（RESOLUTION, FRAMERATE）を定義
   - 環境変数からの読み込み機能を実装
   - _Requirements: 全般_
+  - **実装済み**: Settingsクラス、環境変数読み込み、型変換、テスト（カバレッジ100%）
 
 - [ ] 2.2 ロギング設定の実装
   - `src/mimamori_pi/config/logging_config.py`を作成
