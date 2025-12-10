@@ -57,23 +57,26 @@
 
 ### 3. カメラサービスの基本実装
 
-- [ ] 3.1 カメラサービスクラスの骨格作成
+- [x] 3.1 カメラサービスクラスの骨格作成
   - `src/mimamori_pi/camera/__init__.py`を作成
   - `src/mimamori_pi/camera/camera_service.py`を作成
   - `CameraService`クラスを定義（`__init__`, `start`, `stop`メソッド）
   - _Requirements: 1.2, 2.3, 2.4_
+  - **実装済み**: CameraServiceクラスの骨格、型ヒント、docstring、パッケージエクスポート
 
-- [ ] 3.2 picamera2の初期化実装
+- [x] 3.2 picamera2の初期化実装
   - picamera2のインポートとエラーハンドリング
   - カメラ設定（解像度、フレームレート）の適用
   - カメラ起動・停止処理の実装
   - _Requirements: 1.2, 2.3, 2.4, 2.6_
+  - **実装済み**: picamera2のインポート（ImportErrorハンドリング）、カメラ初期化、設定適用、起動・停止処理、ロギング、エラーハンドリング
 
-- [ ] 3.3 カメラサービスのユニットテスト
+- [x] 3.3 カメラサービスのユニットテスト
   - `tests/test_camera_service.py`を作成
   - モックを使用したカメラ初期化テスト
   - 起動・停止のテスト
   - _Requirements: 1.2, 2.3, 2.4_
+  - **実装済み**: 8つのテストケース（初期化、picamera2未利用時、起動成功、重複起動、エラーハンドリング、停止成功、未起動時の停止、停止エラー）、カバレッジ100%（camera_service.py）
 
 ### 4. ストリーミング機能の実装
 
