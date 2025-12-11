@@ -95,9 +95,11 @@ mimamori-pi/
 │               └── app.js         # フロントエンドロジック
 ├── tests/
 │   ├── __init__.py
-│   ├── test_camera_service.py
-│   ├── test_storage_service.py
-│   └── test_snapshot_service.py
+│   ├── test_app.py                  # Flaskアプリ初期化テスト
+│   ├── test_camera_service.py      # カメラサービステスト
+│   ├── test_logging_config.py      # ロギング設定テスト
+│   ├── test_routes_stream.py       # ストリーミングルートテスト
+│   └── test_settings.py            # 設定クラステスト
 ├── scripts/
 │   ├── setup.sh                   # 初期セットアップスクリプト
 │   └── install_service.sh         # systemdサービスインストール
@@ -252,13 +254,24 @@ resolution = settings.CAMERA_RESOLUTION  # (640, 480)
 
 ### 5. Web Routes
 
-**Main Routes**: メインページ、システム状態API
+**実装済み機能** (Phase 1 - タスク5.1-5.2):
+- Flaskアプリケーションの初期化 (`app.py`)
+- ストリーミングルート (`routes/stream.py`)
+  - `/video_feed`: Motion JPEGストリーム提供（multipart/x-mixed-replace形式）
+  - `/stream/start` (POST): ストリーミング開始
+  - `/stream/stop` (POST): ストリーミング停止
+- エラーハンドリング（カメラ未起動時、picamera2未利用時）
 
-**Stream Routes**: ビデオストリーミング、ストリーミング開始/停止
+**実装詳細**:
+- `src/mimamori_pi/app.py`: Flaskアプリケーションエントリーポイント（カバレッジ100%）
+- `src/mimamori_pi/routes/stream.py`: ストリーミングルート（カバレッジ100%）
+- `tests/test_app.py`: アプリ初期化テスト（8テストケース）
+- `tests/test_routes_stream.py`: ストリーミングルートテスト（9テストケース、カバレッジ100%）
 
-**API Routes**: カメラ設定、スナップショット制御
-
-**Snapshot Routes**: スナップショット一覧表示、画像閲覧
+**未実装機能** (将来のタスク):
+- **Main Routes**: メインページ、システム状態API
+- **API Routes**: カメラ設定、スナップショット制御
+- **Snapshot Routes**: スナップショット一覧表示、画像閲覧
 
 ## UI/UX Design
 

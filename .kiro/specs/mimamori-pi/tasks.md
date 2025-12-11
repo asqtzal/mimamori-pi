@@ -95,18 +95,27 @@
 
 ### 5. 最小限のFlaskアプリケーション
 
-- [ ] 5.1 Flaskアプリの初期化
+- [x] 5.1 Flaskアプリの初期化
   - `src/mimamori_pi/app.py`を作成
   - Flaskアプリを初期化
   - 設定とロギングを適用
   - CameraServiceのインスタンスを作成
   - _Requirements: 全般_
+  - **実装済み**: Flaskアプリの初期化、設定適用、CameraServiceインスタンス作成、エントリーポイント実装
 
 - [ ] 5.2 ストリーミングルートの実装
   - `src/mimamori_pi/routes/__init__.py`を作成
   - `src/mimamori_pi/routes/stream.py`を作成
   - `/video_feed`ルートを実装（Motion JPEGレスポンス）
   - `/stream/start`、`/stream/stop`ルートを実装
+  - _Requirements: 1.1, 2.1, 2.2, 2.3, 2.4_
+
+- [ ] 5.2.1 ストリーミングルートのテスト
+  - `tests/test_routes_stream.py`を作成
+  - `/video_feed`ルートのテスト（Motion JPEGレスポンス形式の確認）
+  - `/stream/start`ルートのテスト（カメラ起動の確認）
+  - `/stream/stop`ルートのテスト（カメラ停止の確認）
+  - エラーハンドリングのテスト（カメラ未起動時など）
   - _Requirements: 1.1, 2.1, 2.2, 2.3, 2.4_
 
 - [ ] 5.3 最小限のHTMLテンプレート
@@ -119,6 +128,12 @@
 - [ ] 5.4 メインルートの実装
   - `src/mimamori_pi/routes/main.py`を作成
   - `/`ルートを実装（index.htmlをレンダリング）
+  - _Requirements: 全般_
+
+- [ ] 5.4.1 メインルートのテスト
+  - `tests/test_routes_main.py`を作成
+  - `/`ルートのテスト（index.htmlが正しくレンダリングされることを確認）
+  - テンプレート変数の確認
   - _Requirements: 全般_
 
 - [ ] 5.5 動作確認（Milestone 1）
