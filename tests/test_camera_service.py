@@ -146,3 +146,62 @@ class TestCameraService:
         # エラー後でもカメラインスタンスがNoneにリセットされることを確認
         assert service._camera is None
 
+    @patch("mimamori_pi.camera.camera_service.Picamera2")
+    def test_generate_stream_success(
+        self,
+        mock_picamera2_class: MagicMock,
+        mock_settings: Settings,
+        mock_picamera2: MagicMock,
+    ) -> None:
+        """generate_streamがMJPEGフレームを返すことを確認."""
+        mock_picamera2_class.return_value = mock_picamera2
+
+        # capture_fileがBytesIOへダミーJPEGを書き込むように設定
+        def fake_capture(buffer: MagicMock, format: str = "jpeg") -> None:
+            buffer.write(b"jpegdata")
+
+        mock_picamera2.capture_file.side_effect = fake_capture
+
+        service = CameraService(mock_settings)
+        service._camera = mock_picamera2  # startをモックする代わりに直接セット
+
+        stream = service.generate_stream()
+        frame = next(stream)
+
+        assert frame.startswith(b"--frame\r\nContent-Type: image/jpeg\r\n\r\njpegdata")
+        assert frame.endswith(b"\r\n")
+
+    @patch("mimamori_pi.camera.camera_service.Picamera2")
+    def test_generate_stream_without_camera(
+        self, mock_picamera2_class: MagicMock, mock_settings: Settings
+    ) -> None:
+        """カメラ未起動でgenerate_streamを呼ぶとRuntimeErrorになることを確認."""
+        service = CameraService(mock_settings)
+        with pytest.raises(RuntimeError, match="Camera is not started"):
+            service.generate_stream()
+
+    @patch("mimamori_pi.camera.camera_service.Picamera2", None)
+    def test_generate_stream_without_picamera2(self, mock_settings: Settings) -> None:
+        """picamera2未インストール時はRuntimeErrorになることを確認."""
+        service = CameraService(mock_settings)
+        with pytest.raises(RuntimeError, match="picamera2 is not available"):
+            service.generate_stream()
+
+    @patch("mimamori_pi.camera.camera_service.Picamera2")
+    def test_generate_stream_capture_error(
+        self,
+        mock_picamera2_class: MagicMock,
+        mock_settings: Settings,
+        mock_picamera2: MagicMock,
+    ) -> None:
+        """フレーム生成中の例外がRuntimeErrorにラップされることを確認."""
+        mock_picamera2_class.return_value = mock_picamera2
+        mock_picamera2.capture_file.side_effect = Exception("capture failed")
+
+        service = CameraService(mock_settings)
+        service._camera = mock_picamera2
+
+        stream = service.generate_stream()
+        with pytest.raises(RuntimeError, match="Failed to generate stream"):
+            next(stream)
+

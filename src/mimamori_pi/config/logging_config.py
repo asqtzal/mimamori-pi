@@ -21,7 +21,7 @@ def setup_logging(log_level: str | None = None, log_dir: Path | None = None) -> 
     # ログレベルの設定
     if log_level is None:
         log_level = os.getenv("MIMAMORI_PI_LOG_LEVEL", "INFO")
-    
+
     numeric_level = getattr(logging, log_level.upper(), logging.INFO)
     if not isinstance(numeric_level, int):
         numeric_level = logging.INFO
@@ -30,7 +30,7 @@ def setup_logging(log_level: str | None = None, log_dir: Path | None = None) -> 
     if log_dir is None:
         project_root = _find_project_root()
         log_dir = project_root / "data" / "logs"
-    
+
     # ログディレクトリの作成
     log_dir.mkdir(parents=True, exist_ok=True)
 

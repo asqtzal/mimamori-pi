@@ -80,16 +80,18 @@
 
 ### 4. ストリーミング機能の実装
 
-- [ ] 4.1 Motion JPEGストリーム生成
+- [x] 4.1 Motion JPEGストリーム生成
   - `CameraService.generate_stream()`メソッドを実装
   - フレームキャプチャとJPEGエンコード
   - ジェネレータ関数として実装
   - _Requirements: 1.1, 1.4, 1.5_
+  - **実装済み**: generate_stream()メソッド、multipart/x-mixed-replace形式のMJPEGフレーム生成、エラーハンドリング（picamera2未利用時、カメラ未起動時、フレーム取得エラー）
 
-- [ ] 4.2 ストリーミングのテスト
+- [x] 4.2 ストリーミングのテスト
   - `tests/test_camera_service.py`にストリーミングテストを追加
   - モックカメラでフレーム生成をテスト
   - _Requirements: 1.1, 1.4, 1.5_
+  - **実装済み**: 4つのテストケース（正常系、カメラ未起動、picamera2未利用、フレーム取得エラー）、カバレッジ100%（camera_service.py）
 
 ### 5. 最小限のFlaskアプリケーション
 

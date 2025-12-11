@@ -135,23 +135,23 @@ mimamori-pi/
 
 **責務**: picamera2を使用したカメラ制御、ストリーミング、設定管理
 
-**実装済み機能** (Phase 1 - タスク3.1-3.3):
+**実装済み機能** (Phase 1 - タスク3.1-4.2):
 - カメラの起動・停止 (`start()`, `stop()`)
 - Settingsからの解像度・フレームレート設定の適用
 - picamera2未利用時のエラーハンドリング（ImportError）
 - カメラ初期化失敗時のエラーハンドリング（RuntimeError）
 - 重複起動の防止
-- ロギング（初期化、起動、停止、エラー）
+- Motion JPEGストリーミングの生成 (`generate_stream()`)
+- ロギング（初期化、起動、停止、ストリーミング、エラー）
 
 **未実装機能** (将来のタスク):
-- Motion JPEGストリーミングの生成 (`generate_stream()`)
 - カメラ回転設定（0/90/180/270度）
 - 静止画キャプチャ
 - カメラ状態の取得
 
 **実装詳細**:
-- `src/mimamori_pi/camera/camera_service.py`: CameraServiceクラス
-- `tests/test_camera_service.py`: ユニットテスト（カバレッジ100%）
+- `src/mimamori_pi/camera/camera_service.py`: CameraServiceクラス（カバレッジ100%）
+- `tests/test_camera_service.py`: ユニットテスト（12テストケース、カバレッジ100%）
 
 **使用例**:
 ```python
@@ -173,6 +173,15 @@ try:
     # カメラが起動中...
 except RuntimeError as e:
     print(f"カメラの起動に失敗しました: {e}")
+
+# Motion JPEGストリームを生成
+try:
+    for frame in camera_service.generate_stream():
+        # フレームを処理（例: Flaskレスポンスとして送信）
+        # frameは multipart/x-mixed-replace 形式のJPEGフレーム
+        pass
+except RuntimeError as e:
+    print(f"ストリーム生成に失敗しました: {e}")
 
 # カメラを停止
 camera_service.stop()

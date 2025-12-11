@@ -1,6 +1,8 @@
 """カメラ制御サービスモジュール."""
 
+import io
 import logging
+from collections.abc import Iterator
 
 try:
     from picamera2 import Picamera2
@@ -89,4 +91,46 @@ class CameraService:
         except Exception as e:
             logger.error(f"Error while stopping camera: {e}", exc_info=True)
             self._camera = None
+
+    def generate_stream(self) -> Iterator[bytes]:
+        """Motion JPEGストリームを生成するジェネレータ.
+
+        Yields:
+            bytes: multipart/x-mixed-replace 形式のJPEGフレーム
+
+        Raises:
+            RuntimeError: カメラが未初期化の場合、またはフレーム生成に失敗した場合
+        """
+        if Picamera2 is None:
+            error_msg = "picamera2 is not available. Please install picamera2 on Raspberry Pi."
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
+
+        if self._camera is None:
+            error_msg = "Camera is not started. Call start() before generate_stream()."
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
+
+        camera = self._camera
+        assert camera is not None  # for type checker
+
+        def _stream() -> Iterator[bytes]:
+            try:
+                while True:
+                    frame_buffer = io.BytesIO()
+                    camera.capture_file(frame_buffer, format="jpeg")
+                    frame_bytes = frame_buffer.getvalue()
+
+                    # Motion JPEG (multipart/x-mixed-replace) フレームとして返却
+                    yield (
+                        b"--frame\r\n"
+                        b"Content-Type: image/jpeg\r\n\r\n"
+                        + frame_bytes
+                        + b"\r\n"
+                    )
+            except Exception as e:
+                logger.error(f"Failed to generate stream: {e}", exc_info=True)
+                raise RuntimeError(f"Failed to generate stream: {e}") from e
+
+        return _stream()
 

@@ -77,6 +77,8 @@ warn_unused_ignores = true
 warn_no_return = true
 check_untyped_defs = true
 strict_equality = true
+explicit_package_bases = true
+mypy_path = ["src"]
 
 [[tool.mypy.overrides]]
 module = [

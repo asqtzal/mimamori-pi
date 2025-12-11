@@ -1,7 +1,9 @@
 """ロギング設定のテスト."""
 
 import logging
+import logging.handlers
 import os
+from collections.abc import Generator
 from pathlib import Path
 from unittest.mock import patch
 
@@ -11,7 +13,7 @@ from mimamori_pi.config.logging_config import setup_logging
 
 
 @pytest.fixture(autouse=True)
-def cleanup_logging() -> None:
+def cleanup_logging() -> Generator[None, None, None]:
     """各テスト後にロギング設定をクリーンアップ."""
     yield
     # テスト後にハンドラーをクリーンアップ
@@ -29,7 +31,7 @@ class TestLoggingConfig:
         with patch.dict(os.environ, {}, clear=True):
             log_dir = tmp_path / "logs"
             setup_logging(log_dir=log_dir)
-            
+
             root_logger = logging.getLogger()
             assert root_logger.level == logging.INFO
 
@@ -48,7 +50,7 @@ class TestLoggingConfig:
             ):
                 log_dir = tmp_path / "logs"
                 setup_logging(log_dir=log_dir)
-                
+
                 root_logger = logging.getLogger()
                 assert root_logger.level == expected_level, f"Failed for {env_level}"
 
@@ -59,7 +61,7 @@ class TestLoggingConfig:
         ):
             log_dir = tmp_path / "logs"
             setup_logging(log_dir=log_dir)
-            
+
             root_logger = logging.getLogger()
             assert root_logger.level == logging.INFO
 
@@ -67,7 +69,7 @@ class TestLoggingConfig:
         """パラメータで指定したログレベルが使用される."""
         log_dir = tmp_path / "logs"
         setup_logging(log_level="DEBUG", log_dir=log_dir)
-        
+
         root_logger = logging.getLogger()
         assert root_logger.level == logging.DEBUG
 
@@ -75,9 +77,9 @@ class TestLoggingConfig:
         """ログディレクトリが自動作成される."""
         log_dir = tmp_path / "logs"
         assert not log_dir.exists()
-        
+
         setup_logging(log_dir=log_dir)
-        
+
         assert log_dir.exists()
         assert log_dir.is_dir()
 
@@ -85,7 +87,7 @@ class TestLoggingConfig:
         """コンソールハンドラーが追加される."""
         log_dir = tmp_path / "logs"
         setup_logging(log_dir=log_dir)
-        
+
         root_logger = logging.getLogger()
         console_handlers = [
             h
@@ -99,7 +101,7 @@ class TestLoggingConfig:
         """ファイルハンドラーが追加される."""
         log_dir = tmp_path / "logs"
         setup_logging(log_dir=log_dir)
-        
+
         root_logger = logging.getLogger()
         file_handlers = [
             h
@@ -112,7 +114,7 @@ class TestLoggingConfig:
         """ログファイルが作成される."""
         log_dir = tmp_path / "logs"
         setup_logging(log_dir=log_dir)
-        
+
         log_file = log_dir / "mimamori-pi.log"
         assert log_file.exists()
 
@@ -120,10 +122,10 @@ class TestLoggingConfig:
         """コンソールにログが出力される."""
         log_dir = tmp_path / "logs"
         setup_logging(log_dir=log_dir)
-        
+
         logger = logging.getLogger("test")
         logger.info("Test message")
-        
+
         captured = capsys.readouterr()
         assert "Test message" in captured.err
 
@@ -131,10 +133,10 @@ class TestLoggingConfig:
         """ファイルにログが出力される."""
         log_dir = tmp_path / "logs"
         setup_logging(log_dir=log_dir)
-        
+
         logger = logging.getLogger("test")
         logger.info("Test message to file")
-        
+
         log_file = log_dir / "mimamori-pi.log"
         assert log_file.exists()
         content = log_file.read_text(encoding="utf-8")
@@ -144,10 +146,10 @@ class TestLoggingConfig:
         """ログフォーマットが正しい."""
         log_dir = tmp_path / "logs"
         setup_logging(log_dir=log_dir)
-        
+
         logger = logging.getLogger("test_logger")
         logger.info("Test message")
-        
+
         log_file = log_dir / "mimamori-pi.log"
         content = log_file.read_text(encoding="utf-8")
         # フォーマット: %(asctime)s - %(name)s - %(levelname)s - %(message)s
@@ -158,14 +160,14 @@ class TestLoggingConfig:
     def test_handlers_cleared_on_multiple_calls(self, tmp_path: Path) -> None:
         """複数回呼び出してもハンドラーが重複しない."""
         log_dir = tmp_path / "logs"
-        
+
         setup_logging(log_dir=log_dir)
         root_logger = logging.getLogger()
         first_call_handlers = len(root_logger.handlers)
-        
+
         setup_logging(log_dir=log_dir)
         second_call_handlers = len(root_logger.handlers)
-        
+
         # ハンドラーは2つ（コンソールとファイル）であるべき
         assert first_call_handlers == 2
         assert second_call_handlers == 2
@@ -174,7 +176,7 @@ class TestLoggingConfig:
         """RotatingFileHandlerの設定が正しい."""
         log_dir = tmp_path / "logs"
         setup_logging(log_dir=log_dir)
-        
+
         root_logger = logging.getLogger()
         file_handlers = [
             h
@@ -182,7 +184,7 @@ class TestLoggingConfig:
             if isinstance(h, logging.handlers.RotatingFileHandler)
         ]
         assert len(file_handlers) == 1
-        
+
         file_handler = file_handlers[0]
         assert file_handler.maxBytes == 10 * 1024 * 1024  # 10MB
         assert file_handler.backupCount == 5
@@ -194,16 +196,16 @@ class TestLoggingConfig:
         for handler in root_logger.handlers[:]:
             handler.close()
             root_logger.removeHandler(handler)
-        
+
         setup_logging()
-        
+
         # プロジェクトルートのdata/logsディレクトリが作成されることを確認
         from mimamori_pi.config.logging_config import _find_project_root
-        
+
         project_root = _find_project_root()
         log_dir = project_root / "data" / "logs"
         assert log_dir.exists()
-        
+
         # クリーンアップ
         for handler in root_logger.handlers[:]:
             handler.close()
@@ -214,7 +216,7 @@ class TestLoggingConfig:
         log_dir = tmp_path / "logs"
         # 通常のケースでは発生しないが、カバレッジのために明示的にテスト
         setup_logging(log_level="INFO", log_dir=log_dir)
-        
+
         root_logger = logging.getLogger()
         assert root_logger.level == logging.INFO
 
