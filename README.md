@@ -72,6 +72,7 @@ uv run python -m mimamori_pi.app
 
 ### 利用可能なエンドポイント
 
+- `GET /`: メインページ（index.html）
 - `GET /video_feed`: Motion JPEGストリーム（カメラ起動後）
 - `POST /stream/start`: ストリーミング開始
 - `POST /stream/stop`: ストリーミング停止

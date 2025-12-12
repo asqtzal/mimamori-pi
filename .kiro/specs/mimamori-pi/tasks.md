@@ -103,38 +103,99 @@
   - _Requirements: 全般_
   - **実装済み**: Flaskアプリの初期化、設定適用、CameraServiceインスタンス作成、エントリーポイント実装
 
-- [ ] 5.2 ストリーミングルートの実装
+- [x] 5.2 ストリーミングルートの実装
   - `src/mimamori_pi/routes/__init__.py`を作成
   - `src/mimamori_pi/routes/stream.py`を作成
   - `/video_feed`ルートを実装（Motion JPEGレスポンス）
   - `/stream/start`、`/stream/stop`ルートを実装
   - _Requirements: 1.1, 2.1, 2.2, 2.3, 2.4_
+  - **実装済み**: stream.py、3つのルート（/video_feed, /stream/start, /stream/stop）、エラーハンドリング
 
-- [ ] 5.2.1 ストリーミングルートのテスト
+- [x] 5.2.1 ストリーミングルートのテスト
   - `tests/test_routes_stream.py`を作成
   - `/video_feed`ルートのテスト（Motion JPEGレスポンス形式の確認）
   - `/stream/start`ルートのテスト（カメラ起動の確認）
   - `/stream/stop`ルートのテスト（カメラ停止の確認）
   - エラーハンドリングのテスト（カメラ未起動時など）
   - _Requirements: 1.1, 2.1, 2.2, 2.3, 2.4_
+  - **実装済み**: test_routes_stream.py、複数のテストケース（正常系、エラー系、統合テスト）
 
-- [ ] 5.3 最小限のHTMLテンプレート
+- [x] 5.3 最小限のHTMLテンプレート
   - `src/mimamori_pi/templates/base.html`を作成（シンプルなレイアウト）
   - `src/mimamori_pi/templates/index.html`を作成
   - ビデオストリーム表示（`<img src="/video_feed">`）
   - 開始/停止ボタン
   - _Requirements: 1.1, 2.1, 2.2_
+  - **実装済み**: base.html、index.html、ビデオストリーム表示、開始/停止ボタン、JavaScriptイベントハンドラ
 
-- [ ] 5.4 メインルートの実装
+- [x] 5.3.1 base.htmlの基本構造作成
+  - `src/mimamori_pi/templates/base.html`を作成
+  - DOCTYPE宣言、`<html>`, `<head>`, `<body>`タグを追加
+  - Flaskのテンプレート継承用の`{% block %}`タグを追加
+  - _Requirements: 1.1, 2.1, 2.2_
+
+- [x] 5.3.2 base.htmlにメタタグとタイトルを追加
+  - `<meta charset="UTF-8">`を追加
+  - `<meta name="viewport" content="width=device-width, initial-scale=1.0">`を追加
+  - `<title>`タグを追加（`{% block title %}`で継承可能に）
+  - _Requirements: 1.1, 2.1, 2.2_
+
+- [x] 5.3.3 base.htmlに最小限のCSSスタイルを追加
+  - `<style>`タグ内にインラインCSSを追加
+  - 基本的なリセット（margin, padding, box-sizing）
+  - シンプルなレイアウトスタイル（body, container）
+  - _Requirements: 1.1, 2.1, 2.2_
+
+- [x] 5.3.4 index.htmlの作成
+  - `src/mimamori_pi/templates/index.html`を作成
+  - `{% extends "base.html" %}`でbase.htmlを継承
+  - `{% block title %}`でタイトルを設定（例: "mimamori-pi"）
+  - `{% block content %}`でメインコンテンツエリアを定義
+  - _Requirements: 1.1, 2.1, 2.2_
+
+- [x] 5.3.5 index.htmlにビデオストリーム表示を追加
+  - `<img src="/video_feed" alt="Video Stream">`を追加
+  - 適切なスタイルを追加（最大幅、中央揃えなど）
+  - _Requirements: 1.1, 2.1, 2.2_
+
+- [x] 5.3.6 index.htmlに開始ボタンを追加
+  - `<button id="start-btn">`要素を追加
+  - ボタンに適切なラベルを設定（例: "ストリーム開始"）
+  - 基本的なスタイルを追加
+  - _Requirements: 1.1, 2.1, 2.2_
+
+- [x] 5.3.7 index.htmlに停止ボタンを追加
+  - `<button id="stop-btn">`要素を追加
+  - ボタンに適切なラベルを設定（例: "ストリーム停止"）
+  - 基本的なスタイルを追加
+  - _Requirements: 1.1, 2.1, 2.2_
+
+- [x] 5.3.8 ボタンのJavaScriptイベントハンドラを追加
+  - `<script>`タグ内にJavaScriptを追加
+  - 開始ボタンのクリックイベントで`fetch('/stream/start', {method: 'POST'})`を呼び出す
+  - 停止ボタンのクリックイベントで`fetch('/stream/stop', {method: 'POST'})`を呼び出す
+  - レスポンスの処理（成功/エラーメッセージの表示）
+  - _Requirements: 1.1, 2.1, 2.2_
+
+- [x] 5.3.9 動作確認
+  - ブラウザで`http://localhost:5000`にアクセス
+  - ビデオストリームが表示されることを確認
+  - 開始ボタンをクリックしてAPIが呼ばれることを確認（開発者ツールのNetworkタブで確認）
+  - 停止ボタンをクリックしてAPIが呼ばれることを確認
+  - _Requirements: 1.1, 2.1, 2.2_
+
+- [x] 5.4 メインルートの実装
   - `src/mimamori_pi/routes/main.py`を作成
   - `/`ルートを実装（index.htmlをレンダリング）
   - _Requirements: 全般_
+  - **実装済み**: main.py、`/`ルート、app.pyへの登録
 
-- [ ] 5.4.1 メインルートのテスト
+- [x] 5.4.1 メインルートのテスト
   - `tests/test_routes_main.py`を作成
   - `/`ルートのテスト（index.htmlが正しくレンダリングされることを確認）
   - テンプレート変数の確認
   - _Requirements: 全般_
+  - **実装済み**: 7つのテストケース（テンプレートレンダリング、タイトル、ビデオストリーム、ボタン、JavaScript、base.html継承の確認）
 
 - [ ] 5.5 動作確認（Milestone 1）
   - `uv run python -m mimamori_pi.app`でアプリを起動

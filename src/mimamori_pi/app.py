@@ -21,7 +21,7 @@ app.config.update(settings.to_flask_config())
 camera_service = CameraService(settings)
 
 # ルートを登録
-from mimamori_pi.routes import stream  # noqa: F401, E402
+from mimamori_pi.routes import main, stream  # noqa: F401, E402
 
 if __name__ == "__main__":
     # アプリケーションを起動

@@ -98,6 +98,7 @@ mimamori-pi/
 │   ├── test_app.py                  # Flaskアプリ初期化テスト
 │   ├── test_camera_service.py      # カメラサービステスト
 │   ├── test_logging_config.py      # ロギング設定テスト
+│   ├── test_routes_main.py         # メインルートテスト
 │   ├── test_routes_stream.py       # ストリーミングルートテスト
 │   └── test_settings.py            # 設定クラステスト
 ├── scripts/
