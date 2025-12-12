@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}mimamori-pi{% endblock %}
+
+{% block head %}
+<style>
+    .video-container {
+        text-align: center;
+        margin: 20px 0;
+    }
+    .video-stream {
+        max-width: 100%;
+        height: auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .button-container {
+        text-align: center;
+        margin: 20px 0;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 0 10px;
+    }
+    #start-btn {
+        background-color: #4CAF50;
+        color: white;
+    }
+    #start-btn:hover {
+        background-color: #45a049;
+    }
+    #stop-btn {
+        background-color: #f44336;
+        color: white;
+    }
+    #stop-btn:hover {
+        background-color: #da190b;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="video-container">
+    <img src="/video_feed" alt="Video Stream" class="video-stream">
+</div>
+<div class="button-container">
+    <button id="start-btn">ストリーム開始</button>
+    <button id="stop-btn">ストリーム停止</button>
+</div>
+<script>
+    document.getElementById('start-btn').addEventListener('click', async function() {
+        try {
+            const response = await fetch('/stream/start', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                alert('ストリームを開始しました');
+            } else {
+                alert('エラー: ' + data.message);
+            }
+        } catch (error) {
+            alert('エラーが発生しました: ' + error.message);
+        }
+    });
+
+    document.getElementById('stop-btn').addEventListener('click', async function() {
+        try {
+            const response = await fetch('/stream/stop', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                alert('ストリームを停止しました');
+            } else {
+                alert('エラー: ' + data.message);
+            }
+        } catch (error) {
+            alert('エラーが発生しました: ' + error.message);
+        }
+    });
+</script>
+{% endblock %}
+

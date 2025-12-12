@@ -1,0 +1,123 @@
+# Raspberry Pi本番環境用の設定ファイル
+# このファイルはRaspberry Pi環境でpyproject.tomlとして使用します
+# 使用方法: Raspberry Pi環境では　uv sync -p pyproject.pi.toml
+
+[project]
+name = "mimamori-pi"
+version = "0.1.0"
+description = "Raspberry Pi ベースの新生児見守りカメラシステム"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "Akira" }
+]
+dependencies = [
+    "flask>=3.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[dependency-groups]
+# Raspberry Pi本番環境でのみ必要な依存関係
+pi = [
+    "picamera2>=0.3.0; sys_platform == 'linux'",
+]
+# 開発環境での依存関係（オプション）
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "ruff>=0.3.0",
+    "mypy>=1.8.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mimamori_pi"]
+
+# Ruff設定
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["src", "tests"]
+exclude = ["prev"]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "ARG",    # flake8-unused-arguments
+    "SIM",    # flake8-simplify
+    "PT",     # flake8-pytest-style
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "ARG",    # Unused function arguments in tests
+    "S101",   # Use of assert in tests
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+# mypy設定
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_unimported = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+check_untyped_defs = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "picamera2.*",
+]
+ignore_missing_imports = true
+
+# pytest設定
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = [
+    "--cov=src/mimamori_pi",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-fail-under=80",
+    "-v",
+]
+
+# Coverage設定
+[tool.coverage.run]
+source = ["src/mimamori_pi"]
+omit = [
+    "*/tests/*",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
