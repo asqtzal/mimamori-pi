@@ -1,0 +1,4 @@
+# Raspberry Pi専用の依存関係
+# システムPythonで使用するため、requirements.txtで管理
+picamera2>=0.3.0
+

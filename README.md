@@ -12,13 +12,14 @@ mimamori-piは、Raspberry Pi上で動作するPython/Flaskベースの赤ちゃ
 ### Mac / 開発
 
 ```bash
-uv sync --group dev
+uv sync --group base --group dev
 ```
 
 ### Raspberry Pi 本番
 
 ```bash
-uv sync -p pyproject.pi.toml
+# システムPythonを使用（picamera2がlibcameraに依存するため）
+pip install -r requirements/base.txt -r requirements/pi.txt
 ```
 
 ## 設定
@@ -62,7 +63,7 @@ MIMAMORI_PI_LOG_LEVEL=INFO
 
 ```bash
 # 依存関係のインストール
-uv sync --group dev
+uv sync --group base --group dev
 
 # アプリケーションの起動
 uv run python -m mimamori_pi.app

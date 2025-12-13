@@ -12,24 +12,39 @@ fileMatchPattern: '**/mimamori-pi/**'
 - MicroSD カード (32GB以上)
 
 ### Software Prerequisites
-- Python 3.12+
+- Python 3.13.5
 - Git
 - [uv](https://github.com/astral-sh/uv) (Pythonパッケージマネージャー)
 
 ## Setup & Tooling
 
-### 仮想環境
+### 仮想環境（開発環境）
+
+開発環境では `uv` を使用して依存関係を管理します。
+
 1. 依存関係のインストール（仮想環境は自動的に作成されます）
    ```bash
-   uv sync
+   # 基本依存関係のみ
+   uv sync --group base
    ```
    または、開発/テスト依存関係を含む場合:
    ```bash
-   uv sync --dev
+   uv sync --group base --group dev
    ```
 2. 仮想環境の有効化（必要な場合）
    - `uv` は `uv run` コマンドで自動的に仮想環境を使用します
    - 手動で有効化する場合: `source .venv/bin/activate` （Windows: `.venv\Scripts\activate`）
+
+### Raspberry Pi本番環境
+
+Raspberry Pi本番環境では、システムPythonを使用して依存関係をインストールします（picamera2がlibcameraに依存するため）。
+
+```bash
+# システムPythonで依存関係をインストール
+pip install -r requirements/base.txt -r requirements/pi.txt
+```
+
+**注意**: `requirements/base.txt` と `requirements/dev.txt` は `scripts/export_reqs.sh` を実行して `uv.lock` から自動生成されます。`requirements/pi.txt` は手動で管理します。
 
 ### 環境変数
 

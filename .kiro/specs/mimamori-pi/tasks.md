@@ -395,9 +395,8 @@
 
 - [ ] 13.2 セットアップスクリプトの作成
   - `scripts/setup.sh`を作成
-  - Python 3.12+の確認
-  - uvのインストール
-  - 依存関係のインストール
+  - Python 3.13.5の確認
+  - 依存関係のインストール（`pip install -r requirements/base.txt -r requirements/pi.txt`）
   - データディレクトリの作成
   - `.env`ファイルの作成
   - _Requirements: 6.1_

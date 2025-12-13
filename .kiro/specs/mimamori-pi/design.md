@@ -6,7 +6,7 @@ mimamori-piは、Raspberry Pi上で動作するPython/Flaskベースの赤ちゃ
 
 ### 技術スタック
 
-- **言語**: Python 3.12+
+- **言語**: Python 3.13.5
 - **パッケージマネージャ**: uv
 - **Webフレームワーク**: Flask 3.0+
 - **カメラライブラリ**: picamera2
@@ -488,7 +488,7 @@ Type=simple
 User=pi
 WorkingDirectory=/home/pi/mimamori-pi
 Environment="PATH=/home/pi/.local/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart=/home/pi/.local/bin/uv run python -m mimamori_pi.app
+ExecStart=/usr/bin/python3 -m mimamori_pi.app
 Restart=always
 RestartSec=10
 
@@ -509,9 +509,9 @@ chmod +x scripts/setup.sh
 ./scripts/setup.sh
 
 # セットアップスクリプトの内容:
-# - Python 3.12+の確認
-# - uvのインストール（未インストールの場合）
-# - 依存関係のインストール (uv sync)
+# - Python 3.13.5の確認
+# - 依存関係のインストール (pip install -r requirements/base.txt -r requirements/pi.txt)
+#   ※ システムPythonを使用（picamera2がlibcameraに依存するため）
 # - データディレクトリ作成 (data/snapshots, data/logs)
 # - 環境変数ファイルのコピー (.env.example -> .env)
 
@@ -536,7 +536,7 @@ git clone <repository-url> mimamori-pi
 cd mimamori-pi
 
 # 2. uvで依存関係インストール（仮想環境は自動作成）
-uv sync --dev
+uv sync --group base --group dev
 
 # 3. テスト実行
 uv run pytest
@@ -554,7 +554,7 @@ uv run python -m mimamori_pi.app
 
 - Raspberry Pi Zero 2 W
 - Raspberry Pi OS Bookworm (64-bit)
-- Python 3.12+
+- Python 3.13.5
 - Camera Module v2/v3 または HQ Camera
 - MicroSD カード (32GB以上推奨)
 - 公式電源アダプタ (5V 3A)
