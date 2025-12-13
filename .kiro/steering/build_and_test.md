@@ -40,7 +40,13 @@ fileMatchPattern: '**/mimamori-pi/**'
 Raspberry Pi本番環境では、システムPythonを使用して依存関係をインストールします（picamera2がlibcameraに依存するため）。
 
 ```bash
-# システムPythonで依存関係をインストール
+# 仮想環境を作成（システムのサイトパッケージも使用可能にする）
+python -m venv .venv --system-site-packages
+
+# 仮想環境を有効化
+source .venv/bin/activate
+
+# 依存関係をインストール
 pip install -r requirements/base.txt -r requirements/pi.txt
 ```
 

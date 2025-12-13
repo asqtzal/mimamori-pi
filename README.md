@@ -18,7 +18,13 @@ uv sync --group base --group dev
 ### Raspberry Pi 本番
 
 ```bash
-# システムPythonを使用（picamera2がlibcameraに依存するため）
+# 仮想環境を作成（システムのサイトパッケージも使用可能にする）
+python -m venv .venv --system-site-packages
+
+# 仮想環境を有効化
+source .venv/bin/activate
+
+# 依存関係をインストール（picamera2がlibcameraに依存するため）
 pip install -r requirements/base.txt -r requirements/pi.txt
 ```
 
