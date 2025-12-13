@@ -13,7 +13,7 @@ fileMatchPattern: '**/mimamori-pi/**'
 - **Power**: 公式電源アダプタ (5V 3A)
 
 ## Core Technologies
-- **Language**: Python 3.12+
+- **Language**: Python 3.13.5
 - **Package Manager**: uv
 - **Web Framework**: Flask 3.0+
 - **Camera Library**: picamera2

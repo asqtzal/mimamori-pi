@@ -3,16 +3,18 @@ name = "mimamori-pi"
 version = "0.1.0"
 description = "Raspberry Pi ベースの新生児見守りカメラシステム"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = "==3.13.5"
 authors = [
     { name = "Akira" }
 ]
-dependencies = [
+dependencies = []
+
+[dependency-groups]
+# Pi/PC共通の依存関係
+base = [
     "flask>=3.0.0",
     "python-dotenv>=1.0.0",
 ]
-
-[dependency-groups]
 # 開発環境での依存関係
 dev = [
     "pytest>=8.0.0",
@@ -32,7 +34,7 @@ packages = ["src/mimamori_pi"]
 # Ruff設定
 [tool.ruff]
 line-length = 88
-target-version = "py312"
+target-version = "py313"
 src = ["src", "tests"]
 exclude = ["prev"]
 
@@ -66,7 +68,7 @@ line-ending = "auto"
 
 # mypy設定
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.13"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
