@@ -257,20 +257,27 @@ resolution = settings.CAMERA_RESOLUTION  # (640, 480)
 
 **実装済み機能** (Phase 1 - タスク5.1-5.2):
 - Flaskアプリケーションの初期化 (`app.py`)
-- ストリーミングルート (`routes/stream.py`)
+- メインルート (`routes/main.py`) - Blueprintパターン
+  - `GET /`: メインページ（index.html）
+- ストリーミングルート (`routes/stream.py`) - Blueprintパターン
   - `/video_feed`: Motion JPEGストリーム提供（multipart/x-mixed-replace形式）
-  - `/stream/start` (POST): ストリーミング開始
-  - `/stream/stop` (POST): ストリーミング停止
+  - `/stream/start` (POST): ストリーミング開始（JSONレスポンス: `{"status": "success|error", "message": "..."}`）
+  - `/stream/stop` (POST): ストリーミング停止（JSONレスポンス: `{"status": "success|error", "message": "..."}`）
 - エラーハンドリング（カメラ未起動時、picamera2未利用時）
 
 **実装詳細**:
-- `src/mimamori_pi/app.py`: Flaskアプリケーションエントリーポイント（カバレッジ100%）
-- `src/mimamori_pi/routes/stream.py`: ストリーミングルート（カバレッジ100%）
+- `src/mimamori_pi/app.py`: Flaskアプリケーションエントリーポイント、Blueprint登録（カバレッジ100%）
+- `src/mimamori_pi/routes/main.py`: メインページルート（Blueprint、カバレッジ100%）
+- `src/mimamori_pi/routes/stream.py`: ストリーミングルート（Blueprint、カバレッジ100%）
 - `tests/test_app.py`: アプリ初期化テスト（8テストケース）
 - `tests/test_routes_stream.py`: ストリーミングルートテスト（9テストケース、カバレッジ100%）
 
+**設計パターン**:
+- **Blueprint Pattern**: ルーティングをBlueprintで分離し、循環インポートを回避
+- **遅延インポート**: Blueprintから`camera_service`などが必要な場合は関数内でインポート
+
 **未実装機能** (将来のタスク):
-- **Main Routes**: メインページ、システム状態API
+- **API Routes**: カメラ設定、システム状態API
 - **API Routes**: カメラ設定、スナップショット制御
 - **Snapshot Routes**: スナップショット一覧表示、画像閲覧
 

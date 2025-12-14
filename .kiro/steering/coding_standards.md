@@ -24,6 +24,12 @@ fileMatchPattern: '**/mimamori-pi/**'
 - **Dependency Inversion**: 抽象に依存し、具象に依存しない
 - **Plugin Architecture**: 新機能を既存コードを変更せずに追加可能
 
+## Flask Routing Pattern
+- **Blueprint Pattern**: ルーティングはBlueprintで分離し、`app.py`で登録
+- **循環インポート回避**: Blueprintから`app`を直接インポートせず、必要な場合は関数内で遅延インポート
+- **ルート分離**: 機能別に`routes/`配下のモジュールに分割（例: `main.py`, `stream.py`）
+- **JSONレスポンス**: APIエンドポイントでは`jsonify()`を使用して明示的にJSONレスポンスを生成（型安全性のため）
+
 ## Testing Strategy
 - **Unit Tests**: pytest を使用、カバレッジ80%以上
 - **Integration Tests**: カメラとの統合テスト

@@ -18,7 +18,13 @@ uv sync --group base --group dev
 ### Raspberry Pi 本番
 
 ```bash
-# システムPythonを使用（picamera2がlibcameraに依存するため）
+# 仮想環境を作成（システムのサイトパッケージも使用可能にする）
+python -m venv .venv --system-site-packages
+
+# 仮想環境を有効化
+source .venv/bin/activate
+
+# 依存関係をインストール（picamera2がlibcameraに依存するため）
 pip install -r requirements/base.txt -r requirements/pi.txt
 ```
 
@@ -75,8 +81,8 @@ uv run python -m mimamori_pi.app
 
 - `GET /`: メインページ（index.html）
 - `GET /video_feed`: Motion JPEGストリーム（カメラ起動後）
-- `POST /stream/start`: ストリーミング開始
-- `POST /stream/stop`: ストリーミング停止
+- `POST /stream/start`: ストリーミング開始（JSONレスポンス: `{"status": "success|error", "message": "..."}`）
+- `POST /stream/stop`: ストリーミング停止（JSONレスポンス: `{"status": "success|error", "message": "..."}`）
 
 ## テスト
 
@@ -101,6 +107,6 @@ uv run ruff format .
 uv run ruff check .
 
 # 型チェック
-uv run mypy src/
+uv run mypy src/mimamori_pi
 ```
 

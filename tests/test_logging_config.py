@@ -13,7 +13,7 @@ from mimamori_pi.config.logging_config import setup_logging
 
 
 @pytest.fixture(autouse=True)
-def cleanup_logging() -> Generator[None, None, None]:
+def cleanup_logging() -> Generator[None]:
     """各テスト後にロギング設定をクリーンアップ."""
     yield
     # テスト後にハンドラーをクリーンアップ

@@ -23,3 +23,4 @@ fileMatchPattern: '**/mimamori-pi/**'
 - **Modular Design**: 機能別にモジュールを分離
 - **Service Layer Pattern**: ビジネスロジックをサービスクラスに集約
 - **Configuration-Driven**: 設定ファイルによる動作制御
+- **Flask Blueprint Pattern**: ルーティングをBlueprintで分離し、循環インポートを回避
