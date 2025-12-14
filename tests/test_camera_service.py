@@ -118,6 +118,8 @@ class TestCameraService:
 
         # カメラが停止されたことを確認
         mock_picamera2.stop.assert_called_once()
+        # カメラリソースが解放されたことを確認
+        mock_picamera2.close.assert_called_once()
         # カメラインスタンスがNoneにリセットされたことを確認
         assert service._camera is None
 
@@ -143,6 +145,29 @@ class TestCameraService:
         service.start()
         service.stop()
 
+        # stop()でエラーが発生してもclose()は呼ばれることを確認
+        mock_picamera2.close.assert_called_once()
+        # エラー後でもカメラインスタンスがNoneにリセットされることを確認
+        assert service._camera is None
+
+    @patch("mimamori_pi.camera.camera_service.Picamera2")
+    def test_stop_close_error_handling(
+        self,
+        mock_picamera2_class: MagicMock,
+        mock_settings: Settings,
+        mock_picamera2: MagicMock,
+    ) -> None:
+        """closeメソッドでエラーが発生した場合でもカメラインスタンスがリセットされることを確認."""
+        mock_picamera2_class.return_value = mock_picamera2
+        mock_picamera2.close.side_effect = Exception("Close error")
+
+        service = CameraService(mock_settings)
+        service.start()
+        service.stop()
+
+        # stop()とclose()の両方が呼ばれることを確認
+        mock_picamera2.stop.assert_called_once()
+        mock_picamera2.close.assert_called_once()
         # エラー後でもカメラインスタンスがNoneにリセットされることを確認
         assert service._camera is None
 
