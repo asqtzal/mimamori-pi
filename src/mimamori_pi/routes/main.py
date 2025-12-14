@@ -1,11 +1,11 @@
 """メインルート."""
 
-from flask import render_template
+from flask import Blueprint, render_template
 
-from mimamori_pi.app import app
+bp = Blueprint("main", __name__)
 
 
-@app.route("/")
+@bp.route("/")
 def index() -> str:
     """メインページをレンダリングするルート.
 

@@ -81,7 +81,7 @@ pip install -r requirements/base.txt -r requirements/pi.txt
 | `uv run ruff format .` | フォーマット整形 |
 | `uv run ruff check .` | スタイル/静的解析 |
 | `uv run ruff check --fix .` | 自動修正可能な問題を修正 |
-| `uv run mypy` | 型検査 |
+| `uv run mypy src/mimamori_pi` | 型検査 |
 | `uv run pytest --maxfail=1 -q` | 軽量検証（PR前など） |
 | `uv run pytest tests/test_routes_stream.py` | ストリーミングルート専用テスト |
 | `uv run pytest tests/test_app.py` | Flaskアプリ初期化テスト |

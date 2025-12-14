@@ -2,20 +2,22 @@
 
 import logging
 
-from flask import Response
-
-from mimamori_pi.app import app, camera_service
+from flask import Blueprint, Response
 
 logger = logging.getLogger(__name__)
 
+bp = Blueprint("stream", __name__)
 
-@app.route("/video_feed")
+
+@bp.route("/video_feed")
 def video_feed() -> Response:
     """Motion JPEGストリームを提供するルート.
 
     Returns:
         Response: multipart/x-mixed-replace形式のMotion JPEGストリーム
     """
+    from mimamori_pi.app import camera_service
+
     try:
         return Response(
             camera_service.generate_stream(),
@@ -30,13 +32,15 @@ def video_feed() -> Response:
         )
 
 
-@app.route("/stream/start", methods=["POST"])
+@bp.route("/stream/start", methods=["POST"])
 def stream_start() -> tuple[dict[str, str], int]:
     """ストリーミングを開始するルート.
 
     Returns:
         tuple[dict[str, str], int]: JSONレスポンスとステータスコード
     """
+    from mimamori_pi.app import camera_service
+
     try:
         camera_service.start()
         logger.info("Stream started via API")
@@ -46,13 +50,15 @@ def stream_start() -> tuple[dict[str, str], int]:
         return {"status": "error", "message": str(e)}, 500
 
 
-@app.route("/stream/stop", methods=["POST"])
+@bp.route("/stream/stop", methods=["POST"])
 def stream_stop() -> tuple[dict[str, str], int]:
     """ストリーミングを停止するルート.
 
     Returns:
         tuple[dict[str, str], int]: JSONレスポンスとステータスコード
     """
+    from mimamori_pi.app import camera_service
+
     try:
         camera_service.stop()
         logger.info("Stream stopped via API")

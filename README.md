@@ -107,6 +107,6 @@ uv run ruff format .
 uv run ruff check .
 
 # 型チェック
-uv run mypy src/
+uv run mypy src/mimamori_pi
 ```
 
