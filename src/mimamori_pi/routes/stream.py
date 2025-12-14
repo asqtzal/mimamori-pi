@@ -18,13 +18,15 @@ def video_feed() -> Response:
     """
     from mimamori_pi.app import camera_service
 
+    logger.info("Video feed requested")
     try:
+        logger.info("Generating video stream...")
         return Response(
             camera_service.generate_stream(),
             mimetype="multipart/x-mixed-replace; boundary=frame",
         )
     except RuntimeError as e:
-        logger.error(f"Failed to generate video feed: {e}")
+        logger.error(f"Failed to generate video feed: {e}", exc_info=True)
         return Response(
             f"Camera error: {e}",
             status=500,
