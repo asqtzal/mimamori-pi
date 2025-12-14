@@ -2,7 +2,7 @@
 
 import logging
 
-from flask import Blueprint, Response
+from flask import Blueprint, Response, jsonify
 
 logger = logging.getLogger(__name__)
 
@@ -33,37 +33,37 @@ def video_feed() -> Response:
 
 
 @bp.route("/stream/start", methods=["POST"])
-def stream_start() -> tuple[dict[str, str], int]:
+def stream_start() -> tuple[Response, int]:
     """ストリーミングを開始するルート.
 
     Returns:
-        tuple[dict[str, str], int]: JSONレスポンスとステータスコード
+        tuple[Response, int]: JSONレスポンスとステータスコード
     """
     from mimamori_pi.app import camera_service
 
     try:
         camera_service.start()
         logger.info("Stream started via API")
-        return {"status": "success", "message": "Stream started"}, 200
+        return jsonify({"status": "success", "message": "Stream started"}), 200
     except RuntimeError as e:
         logger.error(f"Failed to start stream: {e}")
-        return {"status": "error", "message": str(e)}, 500
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @bp.route("/stream/stop", methods=["POST"])
-def stream_stop() -> tuple[dict[str, str], int]:
+def stream_stop() -> tuple[Response, int]:
     """ストリーミングを停止するルート.
 
     Returns:
-        tuple[dict[str, str], int]: JSONレスポンスとステータスコード
+        tuple[Response, int]: JSONレスポンスとステータスコード
     """
     from mimamori_pi.app import camera_service
 
     try:
         camera_service.stop()
         logger.info("Stream stopped via API")
-        return {"status": "success", "message": "Stream stopped"}, 200
+        return jsonify({"status": "success", "message": "Stream stopped"}), 200
     except Exception as e:
         logger.error(f"Failed to stop stream: {e}")
-        return {"status": "error", "message": str(e)}, 500
+        return jsonify({"status": "error", "message": str(e)}), 500
 

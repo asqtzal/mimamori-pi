@@ -261,8 +261,8 @@ resolution = settings.CAMERA_RESOLUTION  # (640, 480)
   - `GET /`: メインページ（index.html）
 - ストリーミングルート (`routes/stream.py`) - Blueprintパターン
   - `/video_feed`: Motion JPEGストリーム提供（multipart/x-mixed-replace形式）
-  - `/stream/start` (POST): ストリーミング開始
-  - `/stream/stop` (POST): ストリーミング停止
+  - `/stream/start` (POST): ストリーミング開始（JSONレスポンス: `{"status": "success|error", "message": "..."}`）
+  - `/stream/stop` (POST): ストリーミング停止（JSONレスポンス: `{"status": "success|error", "message": "..."}`）
 - エラーハンドリング（カメラ未起動時、picamera2未利用時）
 
 **実装詳細**:

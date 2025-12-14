@@ -28,6 +28,7 @@ fileMatchPattern: '**/mimamori-pi/**'
 - **Blueprint Pattern**: ルーティングはBlueprintで分離し、`app.py`で登録
 - **循環インポート回避**: Blueprintから`app`を直接インポートせず、必要な場合は関数内で遅延インポート
 - **ルート分離**: 機能別に`routes/`配下のモジュールに分割（例: `main.py`, `stream.py`）
+- **JSONレスポンス**: APIエンドポイントでは`jsonify()`を使用して明示的にJSONレスポンスを生成（型安全性のため）
 
 ## Testing Strategy
 - **Unit Tests**: pytest を使用、カバレッジ80%以上

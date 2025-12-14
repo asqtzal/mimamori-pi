@@ -81,8 +81,8 @@ uv run python -m mimamori_pi.app
 
 - `GET /`: メインページ（index.html）
 - `GET /video_feed`: Motion JPEGストリーム（カメラ起動後）
-- `POST /stream/start`: ストリーミング開始
-- `POST /stream/stop`: ストリーミング停止
+- `POST /stream/start`: ストリーミング開始（JSONレスポンス: `{"status": "success|error", "message": "..."}`）
+- `POST /stream/stop`: ストリーミング停止（JSONレスポンス: `{"status": "success|error", "message": "..."}`）
 
 ## テスト
 
