@@ -83,14 +83,20 @@ class CameraService:
             logger.debug("Camera is not started")
             return
 
+        camera = self._camera
+        self._camera = None  # 先にNoneに設定して、再起動を防ぐ
+
         try:
             logger.info("Stopping camera...")
-            self._camera.stop()
-            self._camera = None
-            logger.info("Camera stopped")
+            camera.stop()
         except Exception as e:
-            logger.error(f"Error while stopping camera: {e}", exc_info=True)
-            self._camera = None
+            logger.warning(f"Error while stopping camera: {e}", exc_info=True)
+
+        try:
+            camera.close()
+            logger.info("Camera stopped and resources released")
+        except Exception as e:
+            logger.warning(f"Error while closing camera: {e}", exc_info=True)
 
     def generate_stream(self) -> Iterator[bytes]:
         """Motion JPEGストリームを生成するジェネレータ.

@@ -45,41 +45,71 @@
 
 {% block content %}
 <div class="video-container">
-    <img src="/video_feed" alt="Video Stream" class="video-stream">
+    <img id="video-stream" src="" alt="Video Stream" class="video-stream">
 </div>
 <div class="button-container">
     <button id="start-btn">ストリーム開始</button>
     <button id="stop-btn">ストリーム停止</button>
 </div>
 <script>
-    document.getElementById('start-btn').addEventListener('click', async function() {
+    const videoStream = document.getElementById('video-stream');
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+
+    // ストリーム読み込み成功時の処理
+    videoStream.addEventListener('load', function() {
+        console.log('Video stream loaded successfully');
+    });
+
+    // ストリーム読み込み失敗時の処理
+    videoStream.addEventListener('error', function(e) {
+        // 停止時にsrc属性が削除されている場合はエラーを無視
+        if (!videoStream.hasAttribute('src') || videoStream.src === '' || videoStream.src === window.location.href) {
+            return;
+        }
+        console.error('Failed to load video stream:', e);
+        alert('ストリームの読み込みに失敗しました。ブラウザのコンソールを確認してください。');
+    });
+
+    startBtn.addEventListener('click', async function() {
         try {
             const response = await fetch('/stream/start', {
                 method: 'POST'
             });
             const data = await response.json();
             if (data.status === 'success') {
+                // カメラ起動後、少し待ってからストリームを開始
+                // タイムスタンプを追加してキャッシュを回避
+                setTimeout(function() {
+                    videoStream.src = '/video_feed?t=' + new Date().getTime();
+                    console.log('Setting video stream source to:', videoStream.src);
+                }, 100);
                 alert('ストリームを開始しました');
             } else {
                 alert('エラー: ' + data.message);
             }
         } catch (error) {
+            console.error('Error starting stream:', error);
             alert('エラーが発生しました: ' + error.message);
         }
     });
 
-    document.getElementById('stop-btn').addEventListener('click', async function() {
+    stopBtn.addEventListener('click', async function() {
         try {
             const response = await fetch('/stream/stop', {
                 method: 'POST'
             });
             const data = await response.json();
             if (data.status === 'success') {
+                // ストリームを停止（src属性を削除してエラーを回避）
+                videoStream.removeAttribute('src');
+                console.log('Video stream stopped');
                 alert('ストリームを停止しました');
             } else {
                 alert('エラー: ' + data.message);
             }
         } catch (error) {
+            console.error('Error stopping stream:', error);
             alert('エラーが発生しました: ' + error.message);
         }
     });
